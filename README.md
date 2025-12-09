@@ -73,7 +73,7 @@ src/
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- Any IDE: Visual Studio 2022, VS Code, or Rider
+- Any IDE: Visual Studio 2026, VS Code, or Rider
 
 ### Running the Application
 
@@ -136,7 +136,7 @@ dotnet run --project src/SantaClaus.Rest
 
 ## 🤝 Contributing
 
-This is an experimental project for **spec-driven development without external tools**. All architecture, design, and implementation are guided through prompts and conversations.
+This is an experimental project for **spec-driven development with SpecKit**. All architecture, design, and implementation are guided through prompts and conversations.
 
 ## 📄 License
 

@@ -1,11 +1,21 @@
+using System.Collections;
+using Muflone;
+using Muflone.Core;
 using SantaClaus.Marketing.SharedKernel.Events;
 using SantaClaus.Shared.Exceptions;
-using SantaClaus.Shared.ValueObjects;
+using SharedDomainId = SantaClaus.Shared.ValueObjects.DomainId;
 
 namespace SantaClaus.Marketing.Domain.Entities;
 
-public sealed class Letter
+public sealed class Letter : IAggregate
 {
+    // IAggregate.Id - must return IDomainId
+    IDomainId IAggregate.Id => new SharedDomainId(Id);
+    
+    // IAggregate.Version
+    public int Version { get; private set; }
+    
+    // Domain properties
     public Guid Id { get; private set; }
     public Guid ChildId { get; private set; }
     public string Content { get; private set; } = string.Empty;
@@ -15,7 +25,6 @@ public sealed class Letter
     public DateTime? ProcessedAt { get; private set; }
 
     private readonly List<object> _uncommittedEvents = new();
-    public IReadOnlyCollection<object> UncommittedEvents => _uncommittedEvents.AsReadOnly();
 
     private Letter()
     {
@@ -50,7 +59,7 @@ public sealed class Letter
         var letter = new Letter();
         letter.RaiseEvent(new LetterCreated
         {
-            AggregateId = new DomainId(letterId),
+            AggregateId = new SharedDomainId(letterId),
             ChildId = childId,
             Content = content,
             ReceivedDate = receivedDate,
@@ -66,7 +75,7 @@ public sealed class Letter
 
         RaiseEvent(new LetterProcessed
         {
-            AggregateId = new DomainId(Id),
+            AggregateId = new SharedDomainId(Id),
             ProcessedAt = DateTimeOffset.UtcNow
         });
     }
@@ -77,8 +86,10 @@ public sealed class Letter
         _uncommittedEvents.Add(@event);
     }
 
-    private void ApplyEvent(object @event)
+    // IAggregate.ApplyEvent - must be public
+    public void ApplyEvent(object @event)
     {
+        Version++;
         switch (@event)
         {
             case LetterCreated e:
@@ -89,6 +100,12 @@ public sealed class Letter
                 break;
         }
     }
+
+    // IAggregate.GetUncommittedEvents
+    public ICollection GetUncommittedEvents() => _uncommittedEvents;
+
+    // IAggregate.GetSnapshot - not implementing snapshots yet
+    public IMemento? GetSnapshot() => null;
 
     private void Apply(LetterCreated e)
     {
