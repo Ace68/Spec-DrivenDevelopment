@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Modules\Marketing\SantaClaus.Marketing.Facade\SantaClaus.Marketing.Facade.csproj" />
     <ProjectReference Include="..\Modules\Production\SantaClaus.Production.Facade\SantaClaus.Production.Facade.csproj" />
     <ProjectReference Include="..\Modules\Delivery\SantaClaus.Delivery.Facade\SantaClaus.Delivery.Facade.csproj" />
+    <ProjectReference Include="..\SantaClaus.Infrastructure\SantaClaus.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

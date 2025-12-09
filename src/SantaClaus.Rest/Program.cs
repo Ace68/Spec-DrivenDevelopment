@@ -1,4 +1,5 @@
 using Serilog;
+using SantaClaus.Infrastructure;
 using SantaClaus.Rest.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
@@ -14,6 +15,7 @@ try
 
     builder.Host.UseSerilog();
 
+    builder.Services.AddMufloneInfrastructure();
     builder.Services.AddOpenApiModule();
     builder.Services.AddOpenTelemetryModule(builder.Configuration);
     builder.Services.AddModules();
