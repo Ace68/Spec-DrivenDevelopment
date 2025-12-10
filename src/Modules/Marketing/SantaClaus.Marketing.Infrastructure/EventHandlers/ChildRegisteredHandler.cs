@@ -1,4 +1,4 @@
-using SantaClaus.Marketing.Infrastructure.ReadModels;
+using SantaClaus.Marketing.ReadModel;
 using SantaClaus.Marketing.ReadModel.DTOs;
 using SantaClaus.Marketing.SharedKernel.Events;
 
