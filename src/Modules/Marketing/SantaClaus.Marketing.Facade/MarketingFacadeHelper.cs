@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using SantaClaus.Marketing.Infrastructure.ReadModels;
 using SantaClaus.Marketing.ReadModel.QueryHandlers;
+using IReadModelStoreReadModel = SantaClaus.Marketing.ReadModel.IReadModelStore;
 
 namespace SantaClaus.Marketing.Facade;
 
@@ -9,7 +10,9 @@ public static class MarketingFacadeHelper
 {
     public static IServiceCollection AddServices(IServiceCollection services)
     {
-        services.AddSingleton<IReadModelStore, InMemoryReadModelStore>();
+        var readModelStore = new InMemoryReadModelStore();
+        services.AddSingleton<IReadModelStore>(readModelStore);
+        services.AddSingleton<IReadModelStoreReadModel>(readModelStore);
         services.AddScoped<IMarketingFacade, MarketingFacade>();
         
         // Register query handlers

@@ -1,5 +1,6 @@
 using SantaClaus.Marketing.ReadModel.DTOs;
 using SantaClaus.Marketing.ReadModel.Queries;
+using SantaClaus.Marketing.ReadModel;
 
 namespace SantaClaus.Marketing.ReadModel.QueryHandlers;
 

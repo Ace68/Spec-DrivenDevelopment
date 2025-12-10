@@ -107,7 +107,7 @@ public static class MarketingEndpoints
             : Results.NotFound();
     }
 
-    private static async Task<IResult> GetChildren(
+    private static Task<IResult> GetChildren(
         [FromQuery] string? country,
         [FromQuery] int? minBehavior,
         [FromQuery] int page = 1,
@@ -132,7 +132,7 @@ public static class MarketingEndpoints
             .Cast<ChildListItemDto>()
             .ToList();
 
-        return Results.Ok(new PaginatedResult<ChildListItemDto>(items, totalCount, page, pageSize));
+        return Task.FromResult(Results.Ok(new PaginatedResult<ChildListItemDto>(items, totalCount, page, pageSize)));
     }
 
     // ==================== WISHES HANDLERS ====================
