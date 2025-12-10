@@ -1,7 +1,11 @@
-using SantaClaus.Shared.Commands;
+using Muflone.Core;
+using Muflone.Messages.Commands;
 
 namespace SantaClaus.Marketing.SharedKernel.Commands;
 
-public sealed record ApproveWish : Command
+public sealed class ApproveWish : Command
 {
+    public ApproveWish(IDomainId aggregateId) : base(aggregateId)
+    {
+    }
 }

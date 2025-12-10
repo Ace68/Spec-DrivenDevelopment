@@ -15,10 +15,10 @@ public sealed class LetterCreatedHandler(IReadModelStore readModelStore)
 
         var letterDto = new LetterDto(
             LetterId: Guid.Parse(@event.AggregateId.Value),
-            ChildId: @event.ChildId,
-            Content: @event.Content,
+            ChildId: Guid.Parse(@event.ChildId.Value),
+            Content: @event.Content.Value,
             ReceivedDate: DateTime.UtcNow,
-            Language: @event.Language,
+            Language: @event.Language.Value,
             Status: "Pending",
             ProcessedAt: null);
 

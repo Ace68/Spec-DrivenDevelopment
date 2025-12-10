@@ -1,8 +1,9 @@
-using SantaClaus.Shared.Events;
+using Muflone.Messages.Events;
+using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.SharedKernel.Events;
 
-public sealed record LetterProcessed : DomainEvent
+public sealed class LetterProcessed(LetterId aggregateId, DateTime processedAt) : DomainEvent(aggregateId)
 {
-    public DateTimeOffset ProcessedAt { get; init; }
+    public DateTime ProcessedAt { get; private set; } = processedAt;
 }

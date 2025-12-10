@@ -1,11 +1,10 @@
-using SantaClaus.Shared.Events;
+using Muflone.Messages.Events;
 using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.SharedKernel.Events;
 
-public sealed record WishRejected : DomainEvent
+public sealed class WishRejected(ChildId aggregateId, DateTime rejectedAt, string reason) : DomainEvent(aggregateId)
 {
-    public required ChildId ChildId { get; init; }
-    public required DateTimeOffset RejectedAt { get; init; }
-    public required RejectionReason Reason { get; init; }
+    public DateTime RejectedAt { get; private set; } = rejectedAt;
+    public string Reason { get; private set; } = reason;
 }

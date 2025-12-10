@@ -1,11 +1,13 @@
-using SantaClaus.Shared.Events;
+using Muflone.Messages.Events;
 using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.SharedKernel.Events;
 
-public sealed record WishCreated : DomainEvent
+public sealed class WishCreated(
+    ChildId aggregateId,
+    ToyDescription toyDescription,
+    int priority) : DomainEvent(aggregateId)
 {
-    public required ChildId ChildId { get; init; }
-    public required ToyDescription ToyDescription { get; init; }
-    public required WishPriority Priority { get; init; }
+    public ToyDescription ToyDescription { get; private set; } = toyDescription;
+    public int Priority { get; private set; } = priority;
 }

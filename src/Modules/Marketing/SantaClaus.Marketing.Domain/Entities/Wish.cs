@@ -49,13 +49,7 @@ public sealed class Wish : IAggregate
             });
 
         var wish = new Wish();
-        wish.RaiseEvent(new WishCreated
-        {
-            AggregateId = childId,
-            ChildId = childId,
-            ToyDescription = toyDescription,
-            Priority = priority
-        });
+        wish.RaiseEvent(new WishCreated(childId, toyDescription, priority.Value));
         return wish;
     }
 
@@ -66,12 +60,7 @@ public sealed class Wish : IAggregate
         if (Status == WishStatus.Rejected)
             throw new DomainException("Cannot approve a rejected wish");
 
-        RaiseEvent(new WishApproved
-        {
-            AggregateId = ChildId,
-            ChildId = ChildId,
-            ApprovedAt = DateTimeOffset.UtcNow
-        });
+        RaiseEvent(new WishApproved(ChildId, DateTime.UtcNow));
     }
 
     public void Reject(RejectionReason? reason = null)
@@ -81,13 +70,7 @@ public sealed class Wish : IAggregate
         if (Status == WishStatus.Approved)
             throw new DomainException("Cannot reject an approved wish");
 
-        RaiseEvent(new WishRejected
-        {
-            AggregateId = ChildId,
-            ChildId = ChildId,
-            RejectedAt = DateTimeOffset.UtcNow,
-            Reason = reason ?? new RejectionReason(string.Empty)
-        });
+        RaiseEvent(new WishRejected(ChildId, DateTime.UtcNow, reason?.Value ?? string.Empty));
     }
 
     public void ApplyEvent(object @event)
@@ -118,23 +101,22 @@ public sealed class Wish : IAggregate
 
     private void Apply(WishCreated e)
     {
-        Id = Guid.Parse(e.AggregateId.Value);
-        ChildId = e.ChildId;
+        ChildId = (ChildId)e.AggregateId;
         ToyDescription = e.ToyDescription;
-        Priority = e.Priority;
+        Priority = new WishPriority(e.Priority);
         Status = WishStatus.Created;
     }
 
     private void Apply(WishApproved e)
     {
         Status = WishStatus.Approved;
-        ApprovedAt = e.ApprovedAt;
+        ApprovedAt = new DateTimeOffset(e.ApprovedAt);
     }
 
     private void Apply(WishRejected e)
     {
         Status = WishStatus.Rejected;
-        RejectedAt = e.RejectedAt;
+        RejectedAt = new DateTimeOffset(e.RejectedAt);
     }
 
     public void ClearUncommittedEvents() => _uncommittedEvents.Clear();

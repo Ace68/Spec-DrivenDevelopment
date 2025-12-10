@@ -1,16 +1,27 @@
-using SantaClaus.Shared.Events;
+using Muflone.Messages.Events;
+using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.SharedKernel.Events;
 
-public sealed record ChildRegistered : DomainEvent
+public sealed class ChildRegistered(
+    ChildId aggregateId,
+    string firstName,
+    string lastName,
+    DateTime dateOfBirth,
+    string country,
+    string city,
+    string postalCode,
+    string street,
+    double latitude,
+    double longitude) : DomainEvent(aggregateId)
 {
-    public string FirstName { get; init; } = string.Empty;
-    public string LastName { get; init; } = string.Empty;
-    public DateTime DateOfBirth { get; init; }
-    public string Country { get; init; } = string.Empty;
-    public string City { get; init; } = string.Empty;
-    public string PostalCode { get; init; } = string.Empty;
-    public string Street { get; init; } = string.Empty;
-    public double Latitude { get; init; }
-    public double Longitude { get; init; }
+    public string FirstName { get; private set; } = firstName;
+    public string LastName { get; private set; } = lastName;
+    public DateTime DateOfBirth { get; private set; } = dateOfBirth;
+    public string Country { get; private set; } = country;
+    public string City { get; private set; } = city;
+    public string PostalCode { get; private set; } = postalCode;
+    public string Street { get; private set; } = street;
+    public double Latitude { get; private set; } = latitude;
+    public double Longitude { get; private set; } = longitude;
 }

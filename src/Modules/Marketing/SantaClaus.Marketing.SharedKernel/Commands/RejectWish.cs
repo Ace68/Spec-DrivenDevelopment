@@ -1,9 +1,13 @@
-using SantaClaus.Shared.Commands;
-using SantaClaus.Marketing.SharedKernel.CustomTypes;
+using Muflone.Core;
+using Muflone.Messages.Commands;
 
 namespace SantaClaus.Marketing.SharedKernel.Commands;
 
-public sealed record RejectWish : Command
+public sealed class RejectWish : Command
 {
-    public RejectionReason Reason { get; init; } = new(string.Empty);
+    public RejectWish(IDomainId aggregateId) : base(aggregateId)
+    {
+    }
+
+    public string Reason { get; set; } = string.Empty;
 }

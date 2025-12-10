@@ -1,12 +1,17 @@
+using Muflone.Messages.Commands;
 using SantaClaus.Marketing.SharedKernel.CustomTypes;
-using SantaClaus.Shared.Commands;
 
 namespace SantaClaus.Marketing.SharedKernel.Commands;
 
-public sealed record CreateLetter : Command
+public sealed class CreateLetter(
+    LetterId aggregateId,
+    ChildId childId,
+    LetterContent content,
+    DateTime receivedDate,
+    LetterLanguage letterLanguage) : Command(aggregateId)
 {
-    public Guid ChildId { get; init; }
-    public LetterContent Content { get; init; } = new(string.Empty);
-    public DateTime ReceivedDate { get; init; }
-    public LetterLanguage Language { get; init; } = new(string.Empty);
+    public ChildId ChildId { get; private set; } = childId;
+    public LetterContent Content { get; private set; } = content;
+    public DateTime ReceivedDate { get; private set; } = receivedDate;
+    public LetterLanguage Language { get; private set; } = letterLanguage;
 }

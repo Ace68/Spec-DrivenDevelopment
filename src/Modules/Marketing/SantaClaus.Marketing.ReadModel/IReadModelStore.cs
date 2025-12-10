@@ -69,7 +69,7 @@ public interface IReadModelStore
     /// <summary>
     /// Add or update a wish in the read model store.
     /// </summary>
-    void UpsertWish(Guid childId, WishItemDto wish);
+    void UpsertWish(string childId, WishItemDto wish);
 
     /// <summary>
     /// Get all wishes for a specific child.

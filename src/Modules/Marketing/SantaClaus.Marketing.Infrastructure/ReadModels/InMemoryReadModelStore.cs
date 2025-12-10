@@ -127,7 +127,7 @@ public sealed class InMemoryReadModelStore : IReadModelStore
 
     #region Wish Operations
 
-    public void UpsertWish(Guid childId, WishItemDto wish)
+    public void UpsertWish(string childId, WishItemDto wish)
     {
         ArgumentNullException.ThrowIfNull(wish);
         _wishes.AddOrUpdate(wish.WishId, wish, (_, _) => wish);

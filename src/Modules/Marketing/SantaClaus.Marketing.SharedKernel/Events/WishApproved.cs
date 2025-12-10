@@ -1,10 +1,9 @@
+using Muflone.Messages.Events;
 using SantaClaus.Marketing.SharedKernel.CustomTypes;
-using SantaClaus.Shared.Events;
 
 namespace SantaClaus.Marketing.SharedKernel.Events;
 
-public sealed record WishApproved : DomainEvent
+public sealed class WishApproved(ChildId aggregateId, DateTime approvedAt) : DomainEvent(aggregateId)
 {
-    public required ChildId ChildId { get; init; }
-    public required DateTimeOffset ApprovedAt { get; init; }
+    public DateTime ApprovedAt { get; private set; } = approvedAt;
 }

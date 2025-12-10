@@ -1,5 +1,8 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Serilog;
 using SantaClaus.Infrastructure;
+using SantaClaus.Marketing.SharedKernel.Converters;
 using SantaClaus.Rest.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
@@ -14,6 +17,13 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog();
+
+    // Configure JSON serialization for strong types
+    builder.Services.Configure<JsonSerializerOptions>(options =>
+    {
+        options.PropertyNameCaseInsensitive = true;
+        options.Converters.Add(new StrongTypeJsonConverterFactory());
+    });
 
     // builder.Services.AddInMemoryBroker();
     builder.Services.AddInfrastructure();

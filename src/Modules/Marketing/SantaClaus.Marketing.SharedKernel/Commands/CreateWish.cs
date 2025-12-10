@@ -1,11 +1,12 @@
-using SantaClaus.Shared.Commands;
+using Muflone.Core;
+using Muflone.Messages.Commands;
 using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.SharedKernel.Commands;
 
-public sealed record CreateWish : Command
+public sealed class CreateWish(IDomainId aggregateId) : Command(aggregateId)
 {
-    public required ChildId ChildId { get; init; }
-    public required ToyDescription ToyDescription { get; init; }
-    public required WishPriority Priority { get; init; }
+    public Guid ChildId { get; set; }
+    public ToyDescription ToyDescription { get; set; } = new(string.Empty);
+    public int Priority { get; set; }
 }

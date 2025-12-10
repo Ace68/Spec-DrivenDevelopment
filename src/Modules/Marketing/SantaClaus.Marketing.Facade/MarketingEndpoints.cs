@@ -87,23 +87,15 @@ public static class MarketingEndpoints
                 return Results.BadRequest("Letter content is required");
 
             var letterId = Guid.NewGuid();
-            var command = new CreateLetter
-            {
-                AggregateId = new LetterId(letterId),
-                ChildId = request.ChildId,
-                Content = new LetterContent(request.Content),
-                ReceivedDate = request.ReceivedDate ?? DateTime.UtcNow,
-                Language = new LetterLanguage(request.Language ?? "EN")
-            };
+            var command = new CreateLetter(new LetterId(letterId),
+                new ChildId(request.ChildId),
+                new LetterContent(request.Content),
+                request.ReceivedDate ?? DateTime.UtcNow,
+                new LetterLanguage(request.Language ?? "EN"));
 
             await serviceBus.SendAsync(command, cancellationToken);
 
-            // Get the created letter from read model
-            var letter = readModelStore.GetLetterById(letterId);
-            
-            return letter is not null
-                ? Results.Created($"/v1/marketing/letters/{letter.LetterId}", letter)
-                : Results.StatusCode(StatusCodes.Status500InternalServerError);
+            return Results.Accepted($"/v1/marketing/letters/{letterId}", letterId);
         }
         catch (Exception ex)
         {
@@ -124,10 +116,7 @@ public static class MarketingEndpoints
         if (letter.Status == "Processed")
             return Results.BadRequest("Letter is already processed");
 
-        var command = new ProcessLetter
-        {
-            AggregateId = new LetterId(letterId)
-        };
+        var command = new ProcessLetter(new LetterId(letterId));
 
         await serviceBus.SendAsync(command, cancellationToken);
 

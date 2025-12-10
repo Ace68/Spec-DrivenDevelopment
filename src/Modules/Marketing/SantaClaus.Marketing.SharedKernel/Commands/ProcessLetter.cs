@@ -1,7 +1,11 @@
-using SantaClaus.Shared.Commands;
+using Muflone.Core;
+using Muflone.Messages.Commands;
 
 namespace SantaClaus.Marketing.SharedKernel.Commands;
 
-public sealed record ProcessLetter : Command
+public sealed class ProcessLetter : Command
 {
+    public ProcessLetter(IDomainId aggregateId) : base(aggregateId)
+    {
+    }
 }

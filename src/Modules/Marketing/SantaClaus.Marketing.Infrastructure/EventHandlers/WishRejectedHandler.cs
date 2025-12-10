@@ -26,7 +26,7 @@ public sealed class WishRejectedHandler(IReadModelStore readModelStore)
             Priority: existingWish.Priority,
             Status: "Rejected");
 
-        readModelStore.UpsertWish((Guid)@event.ChildId, updatedWish);
+        readModelStore.UpsertWish(Guid.Parse(@event.AggregateId.Value).ToString(), updatedWish);
         await Task.CompletedTask;
     }
 }

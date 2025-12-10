@@ -1,12 +1,12 @@
+using Muflone.Core;
 using Muflone.Messages.Commands;
 using Muflone.Persistence;
 using Microsoft.Extensions.Logging;
-using SantaClaus.Shared.Commands;
 
 namespace SantaClaus.Marketing.Domain.CommandHandlers;
 
 public abstract class CommandHandlerBaseAsync<TCommand>(IRepository repository,
-    ILoggerFactory loggerFactory) : ICommandHandlerAsync<TCommand> where TCommand : SantaClaus.Shared.Commands.Command
+    ILoggerFactory loggerFactory) : ICommandHandlerAsync<TCommand> where TCommand : Command
 {
     protected readonly IRepository Repository = repository;
     protected readonly ILogger Logger = loggerFactory.CreateLogger<CommandHandlerBaseAsync<TCommand>>();

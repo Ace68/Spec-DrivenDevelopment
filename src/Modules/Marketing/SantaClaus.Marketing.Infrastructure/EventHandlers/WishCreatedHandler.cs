@@ -14,13 +14,13 @@ public sealed class WishCreatedHandler(IReadModelStore readModelStore)
         ArgumentNullException.ThrowIfNull(@event);
 
         var wishDto = new WishItemDto(
-            WishId: Guid.Parse(@event.AggregateId.Value),
+            WishId: Guid.NewGuid(),
             Description: @event.ToyDescription,
             Category: "General",
             Priority: @event.Priority,
             Status: "Pending");
 
-        readModelStore.UpsertWish((Guid)@event.ChildId, wishDto);
+        readModelStore.UpsertWish(Guid.Parse(@event.AggregateId.Value).ToString(), wishDto);
         await Task.CompletedTask;
     }
 }

@@ -30,7 +30,7 @@ public sealed class Letter : IAggregate
     {
     }
 
-    public static Letter Create(Guid letterId, Guid childId, LetterContent content, DateTime receivedDate, LetterLanguage language)
+    public static Letter Create(LetterId letterId, ChildId childId, LetterContent content, DateTime receivedDate, LetterLanguage language)
     {
         if (letterId == Guid.Empty)
             throw new ValidationException(new Dictionary<string, string[]>
@@ -38,33 +38,9 @@ public sealed class Letter : IAggregate
                 { nameof(letterId), new[] { "Letter ID cannot be empty" } }
             });
 
-        if (childId == Guid.Empty)
-            throw new ValidationException(new Dictionary<string, string[]>
-            {
-                { nameof(childId), new[] { "Child ID cannot be empty" } }
-            });
-
-        if (string.IsNullOrWhiteSpace(content))
-            throw new ValidationException(new Dictionary<string, string[]>
-            {
-                { nameof(content), new[] { "Content cannot be empty" } }
-            });
-
-        if (string.IsNullOrWhiteSpace(language))
-            throw new ValidationException(new Dictionary<string, string[]>
-            {
-                { nameof(language), new[] { "Language cannot be empty" } }
-            });
 
         var letter = new Letter();
-        letter.RaiseEvent(new LetterCreated
-        {
-            AggregateId = new LetterId(letterId),
-            ChildId = childId,
-            Content = content,
-            ReceivedDate = receivedDate,
-            Language = language
-        });
+        letter.RaiseEvent(new LetterCreated(letterId, childId, content, receivedDate, language));
         return letter;
     }
 
@@ -73,11 +49,7 @@ public sealed class Letter : IAggregate
         if (Status == LetterStatus.Processed)
             throw new DomainException("Letter has already been processed");
 
-        RaiseEvent(new LetterProcessed
-        {
-            AggregateId = Id,
-            ProcessedAt = DateTimeOffset.UtcNow
-        });
+        RaiseEvent(new LetterProcessed(Id, DateTime.UtcNow));
     }
 
     private void RaiseEvent(object @event)
@@ -110,7 +82,7 @@ public sealed class Letter : IAggregate
     private void Apply(LetterCreated e)
     {
         Id = new LetterId(Guid.Parse(e.AggregateId.Value));
-        ChildId = e.ChildId;
+        ChildId = Guid.Parse(e.ChildId.Value);
         Content = e.Content;
         ReceivedDate = e.ReceivedDate;
         Language = e.Language;
@@ -120,7 +92,7 @@ public sealed class Letter : IAggregate
     private void Apply(LetterProcessed e)
     {
         Status = LetterStatus.Processed;
-        ProcessedAt = e.ProcessedAt.DateTime;
+        ProcessedAt = e.ProcessedAt;
     }
 
     public void ClearUncommittedEvents()

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
+using SantaClaus.Marketing.Domain;
 using SantaClaus.Marketing.Infrastructure.ReadModels;
 using SantaClaus.Marketing.ReadModel.QueryHandlers;
 using IReadModelStoreReadModel = SantaClaus.Marketing.ReadModel.IReadModelStore;
@@ -14,6 +15,9 @@ public static class MarketingFacadeHelper
         services.AddSingleton<IReadModelStore>(readModelStore);
         services.AddSingleton<IReadModelStoreReadModel>(readModelStore);
         services.AddScoped<IMarketingFacade, MarketingFacade>();
+        
+        // Register CommandHandlers
+        services.AddMarketingDomain();
         
         // Register query handlers
         services.AddScoped<GetLetterByIdHandler>();

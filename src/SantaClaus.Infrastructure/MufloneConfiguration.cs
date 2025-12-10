@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Muflone.Persistence;
+using Muflone.Transport.InMemory;
+using SantaClaus.Infrastructure.Repositories;
 
 namespace SantaClaus.Infrastructure;
 
@@ -15,7 +17,8 @@ public static class MufloneConfiguration
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddMufloneInfrastructure(this IServiceCollection services)
     {
-        // Register in-memory broker for messaging
+        services.AddMufloneTransportInMemory();
+        services.AddSingleton<IRepository, InMemoryRepository>();
         return services;
     }
 }
