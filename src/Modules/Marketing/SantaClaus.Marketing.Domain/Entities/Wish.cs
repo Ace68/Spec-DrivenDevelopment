@@ -69,6 +69,7 @@ public sealed class Wish : IAggregate
         RaiseEvent(new WishApproved
         {
             AggregateId = ChildId,
+            ChildId = ChildId,
             ApprovedAt = DateTimeOffset.UtcNow
         });
     }
@@ -83,6 +84,7 @@ public sealed class Wish : IAggregate
         RaiseEvent(new WishRejected
         {
             AggregateId = ChildId,
+            ChildId = ChildId,
             RejectedAt = DateTimeOffset.UtcNow,
             Reason = reason ?? new RejectionReason(string.Empty)
         });

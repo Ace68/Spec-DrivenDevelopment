@@ -1,0 +1,28 @@
+using SantaClaus.Marketing.Infrastructure.ReadModels;
+using SantaClaus.Marketing.ReadModel.DTOs;
+using SantaClaus.Marketing.SharedKernel.Events;
+
+namespace SantaClaus.Marketing.Infrastructure.EventHandlers;
+
+/// <summary>
+/// Projects LetterCreated domain events to the Letter read model.
+/// </summary>
+public sealed class LetterCreatedHandler(IReadModelStore readModelStore)
+{
+    public async Task HandleAsync(LetterCreated @event, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(@event);
+
+        var letterDto = new LetterDto(
+            LetterId: Guid.Parse(@event.AggregateId.Value),
+            ChildId: @event.ChildId,
+            Content: @event.Content,
+            ReceivedDate: DateTime.UtcNow,
+            Language: @event.Language,
+            Status: "Pending",
+            ProcessedAt: null);
+
+        readModelStore.UpsertLetter(letterDto);
+        await Task.CompletedTask;
+    }
+}
