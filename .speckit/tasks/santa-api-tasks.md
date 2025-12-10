@@ -785,7 +785,7 @@ Implement the Child aggregate.
 
 **Priority:** Critical  
 **Assignee:** Developer 2  
-**Status:** 🔴 Blocked (TASK-207)  
+**Status:** ✅ Complete  
 **Estimated Time:** 3 hours  
 **Dependencies:** TASK-207
 
@@ -803,12 +803,13 @@ Implement the Wish aggregate.
 - `SantaClaus.Marketing.Domain/Commands/RejectWish.cs`
 
 **Acceptance Criteria:**
-- [ ] `Wish` aggregate with status management
-- [ ] Priority levels (1-5)
-- [ ] Approval and rejection logic
-- [ ] Cannot approve already approved wish
-- [ ] All events and commands defined
-- [ ] Code compiles
+
+- [x] `Wish` aggregate with status management
+- [x] Priority levels (1-5)
+- [x] Approval and rejection logic
+- [x] Cannot approve already approved wish
+- [x] All events and commands defined
+- [x] Code compiles
 
 ---
 
@@ -816,7 +817,7 @@ Implement the Wish aggregate.
 
 **Priority:** Critical  
 **Assignee:** Developer 1  
-**Status:** 🔴 Blocked (TASK-300)  
+**Status:** ✅ Complete  
 **Estimated Time:** 2 hours  
 **Dependencies:** TASK-300
 
@@ -828,11 +829,12 @@ Implement command handlers for Letter aggregate.
 - `SantaClaus.Marketing.Domain/CommandHandlers/ProcessLetterHandler.cs`
 
 **Acceptance Criteria:**
-- [ ] Handlers implement `ICommandHandler<T>` from Muflone
-- [ ] Use `IRepository` for persistence
-- [ ] Proper error handling
-- [ ] Async implementation
-- [ ] Code compiles
+
+- [x] Convention-based handlers (Muflone 8.5.0, no interface)
+- [x] Use `IRepository` for persistence
+- [x] Proper error handling
+- [x] Async implementation
+- [x] Code compiles
 
 ---
 
@@ -863,7 +865,7 @@ Implement command handlers for Child aggregate.
 
 **Priority:** Critical  
 **Assignee:** Developer 2  
-**Status:** 🔴 Blocked (TASK-302)  
+**Status:** ✅ Complete  
 **Estimated Time:** 2 hours  
 **Dependencies:** TASK-302
 
@@ -876,9 +878,13 @@ Implement command handlers for Wish aggregate.
 - `SantaClaus.Marketing.Domain/CommandHandlers/RejectWishHandler.cs`
 
 **Acceptance Criteria:**
-- [ ] Handlers properly structured
-- [ ] Business rules enforced
-- [ ] Code compiles
+
+- [x] Handlers properly structured (convention-based, Muflone 8.5.0)
+- [x] Business rules enforced (approve/reject constraints, validation)
+- [x] Uses `IRepository` for persistence and retrieval
+- [x] Proper error handling for missing aggregates
+- [x] Async implementation
+- [x] Code compiles
 
 ---
 
