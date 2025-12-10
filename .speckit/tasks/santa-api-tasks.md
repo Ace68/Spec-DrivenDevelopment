@@ -892,7 +892,7 @@ Implement command handlers for Wish aggregate.
 
 **Priority:** High  
 **Assignee:** Developer 2  
-**Status:** 🔴 Blocked (TASK-302)  
+**Status:** ✅ Complete  
 **Estimated Time:** 2 hours  
 **Dependencies:** TASK-302
 
@@ -907,10 +907,10 @@ Create DTOs for read operations.
 - `SantaClaus.Marketing.ReadModel/DTOs/NotificationDto.cs`
 
 **Acceptance Criteria:**
-- [ ] All DTOs are records
-- [ ] Properties match API specification
-- [ ] Immutable design
-- [ ] Code compiles
+- [x] All DTOs are records
+- [x] Properties match API specification
+- [x] Immutable design
+- [x] Code compiles
 
 ---
 
@@ -918,7 +918,7 @@ Create DTOs for read operations.
 
 **Priority:** High  
 **Assignee:** Developer 2  
-**Status:** 🔴 Blocked (TASK-306)  
+**Status:** 🟡 Ready  
 **Estimated Time:** 3 hours  
 **Dependencies:** TASK-306
 
