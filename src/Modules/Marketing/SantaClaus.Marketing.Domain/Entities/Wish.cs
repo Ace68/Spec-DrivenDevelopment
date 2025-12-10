@@ -2,21 +2,21 @@ using System.Collections;
 using Muflone;
 using Muflone.Core;
 using SantaClaus.Marketing.Domain.Entities;
+using SantaClaus.Marketing.SharedKernel.CustomTypes;
 using SantaClaus.Marketing.SharedKernel.Events;
 using SantaClaus.Shared.Exceptions;
-using SharedDomainId = SantaClaus.Shared.ValueObjects.DomainId;
 
 namespace SantaClaus.Marketing.Domain.Entities;
 
 public sealed class Wish : IAggregate
 {
-    IDomainId IAggregate.Id => new SharedDomainId(Id);
+    IDomainId IAggregate.Id => ChildId;
     public int Version { get; private set; }
 
     public Guid Id { get; private set; }
-    public Guid ChildId { get; private set; }
-    public string ToyDescription { get; private set; } = string.Empty;
-    public int Priority { get; private set; }
+    public ChildId ChildId { get; private set; } = null!;
+    public ToyDescription ToyDescription { get; private set; } = null!;
+    public WishPriority Priority { get; private set; } = null!;
     public WishStatus Status { get; private set; }
     public DateTimeOffset? ApprovedAt { get; private set; }
     public DateTimeOffset? RejectedAt { get; private set; }
@@ -25,24 +25,24 @@ public sealed class Wish : IAggregate
 
     private Wish() { }
 
-    public static Wish Create(Guid wishId, Guid childId, string toyDescription, int priority)
+    public static Wish Create(Guid wishId, ChildId childId, ToyDescription toyDescription, WishPriority priority)
     {
         if (wishId == Guid.Empty)
             throw new ValidationException(new Dictionary<string, string[]>
             {
                 { nameof(wishId), new[] { "Wish ID cannot be empty" } }
             });
-        if (childId == Guid.Empty)
+        if (childId is null)
             throw new ValidationException(new Dictionary<string, string[]>
             {
-                { nameof(childId), new[] { "Child ID cannot be empty" } }
+                { nameof(childId), new[] { "Child ID cannot be null" } }
             });
-        if (string.IsNullOrWhiteSpace(toyDescription))
+        if (toyDescription is null || string.IsNullOrWhiteSpace(toyDescription.Value))
             throw new ValidationException(new Dictionary<string, string[]>
             {
                 { nameof(toyDescription), new[] { "Toy description cannot be empty" } }
             });
-        if (priority is < 1 or > 5)
+        if (priority is null || priority.Value is < 1 or > 5)
             throw new ValidationException(new Dictionary<string, string[]>
             {
                 { nameof(priority), new[] { "Priority must be between 1 and 5" } }
@@ -51,7 +51,7 @@ public sealed class Wish : IAggregate
         var wish = new Wish();
         wish.RaiseEvent(new WishCreated
         {
-            AggregateId = new SharedDomainId(wishId),
+            AggregateId = childId,
             ChildId = childId,
             ToyDescription = toyDescription,
             Priority = priority
@@ -68,12 +68,12 @@ public sealed class Wish : IAggregate
 
         RaiseEvent(new WishApproved
         {
-            AggregateId = new SharedDomainId(Id),
+            AggregateId = ChildId,
             ApprovedAt = DateTimeOffset.UtcNow
         });
     }
 
-    public void Reject(string? reason = null)
+    public void Reject(RejectionReason? reason = null)
     {
         if (Status == WishStatus.Rejected)
             throw new DomainException("Wish already rejected");
@@ -82,9 +82,9 @@ public sealed class Wish : IAggregate
 
         RaiseEvent(new WishRejected
         {
-            AggregateId = new SharedDomainId(Id),
+            AggregateId = ChildId,
             RejectedAt = DateTimeOffset.UtcNow,
-            Reason = reason ?? string.Empty
+            Reason = reason ?? new RejectionReason(string.Empty)
         });
     }
 

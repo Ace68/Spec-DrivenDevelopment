@@ -1177,6 +1177,179 @@ All endpoints return consistent error responses:
   - Status codes
   - Authentication requirements (when implemented)
 
+## Muflone Framework - Strong Typing Pattern
+
+The project uses **Muflone 8.5.0**, a CQRS+ES (Command Query Responsibility Segregation + Event Sourcing) framework that enforces strong typing throughout the application. All commands must derive from the base `Muflone.Messages.Commands.Command` class.
+
+### Strong Type Pattern
+
+Rather than using primitive types (strings, integers) in commands and events, the architecture requires custom types that provide semantic meaning and type safety:
+
+#### Domain IDs (DomainId-derived classes)
+
+For aggregate identifiers, create sealed classes that derive from `Muflone.Core.DomainId`:
+
+**ChildId example:**
+
+```csharp
+using Muflone.Core;
+
+namespace SantaClaus.Marketing.SharedKernel.CustomTypes;
+
+public sealed class ChildId : DomainId
+{
+    public ChildId(Guid value) : base(value.ToString()) { }
+    public ChildId(string value) : base(value) { }
+
+    public static implicit operator ChildId(Guid guid) => new(guid);
+    public static implicit operator Guid(ChildId childId) => Guid.Parse(childId.Value);
+}
+```
+
+**LetterId example (TASK-303 - Letter aggregate):**
+
+```csharp
+using Muflone.Core;
+
+namespace SantaClaus.Marketing.SharedKernel.CustomTypes;
+
+public sealed class LetterId : DomainId
+{
+    public LetterId(Guid value) : base(value.ToString()) { }
+    public LetterId(string value) : base(value) { }
+
+    public static implicit operator Guid(LetterId? letterId) => 
+        letterId != null ? Guid.Parse(letterId.Value) : Guid.Empty;
+    public static implicit operator LetterId(Guid value) => new(value);
+    public static implicit operator string(LetterId? letterId) => 
+        letterId?.Value ?? string.Empty;
+}
+```
+
+#### Value Types (Record-based)
+
+For non-identifier types, create sealed records with implicit operators:
+
+**ToyDescription and WishPriority examples (TASK-305 - Wish aggregate):**
+
+```csharp
+namespace SantaClaus.Marketing.SharedKernel.CustomTypes;
+
+public sealed record ToyDescription(string Value)
+{
+    public static implicit operator ToyDescription(string value) => new(value);
+    public static implicit operator string(ToyDescription toyDescription) => toyDescription.Value;
+}
+
+public sealed record WishPriority(int Value)
+{
+    public static implicit operator WishPriority(int value) => new(value);
+    public static implicit operator int(WishPriority priority) => priority.Value;
+}
+```
+
+**LetterContent and LetterLanguage examples (TASK-303 - Letter aggregate):**
+
+```csharp
+namespace SantaClaus.Marketing.SharedKernel.CustomTypes;
+
+public sealed record LetterContent(string Value)
+{
+    public static implicit operator string(LetterContent? content) => content?.Value ?? string.Empty;
+    public static implicit operator LetterContent(string value) => new(value);
+}
+
+public sealed record LetterLanguage(string Value)
+{
+    public static implicit operator string(LetterLanguage? language) => language?.Value ?? string.Empty;
+    public static implicit operator LetterLanguage(string value) => new(value);
+}
+```
+
+### Commands with Strong Types
+
+All commands must use custom types instead of primitives:
+
+**Incorrect:**
+
+```csharp
+public sealed record CreateWish : Command
+{
+    public required Guid ChildId { get; init; }
+    public required string ToyDescription { get; init; }
+    public required int Priority { get; init; }
+}
+```
+
+**Correct:**
+
+```csharp
+public sealed record CreateWish : Command
+{
+    public required ChildId ChildId { get; init; }
+    public required ToyDescription ToyDescription { get; init; }
+    public required WishPriority Priority { get; init; }
+}
+```
+
+### Benefits
+
+- **Type Safety**: Compiler prevents mixing incompatible types
+- **Domain-Driven**: Types reflect domain concepts
+- **Validation**: Custom types encapsulate validation logic
+- **Implicit Conversion**: Seamless interop with primitives via operators
+- **Muflone Compatibility**: Required for proper serialization and handler registration
+
+### Command Handler Pattern
+
+Command handlers must inherit from `CommandHandlerBaseAsync<TCommand>` and implement the CQRS pattern:
+
+```csharp
+public sealed class CreateWishHandler(IRepository repository, ILoggerFactory loggerFactory)
+    : CommandHandlerBaseAsync<CreateWish>(repository, loggerFactory)
+{
+    public override async Task HandleAsync(CreateWish command, CancellationToken cancellationToken = new())
+    {
+        var wish = Wish.Create(
+            Guid.Parse(command.AggregateId.Value),
+            command.ChildId,
+            command.ToyDescription,
+            command.Priority
+        );
+        await repository.SaveAsync(wish, Guid.NewGuid(), cancellationToken).ConfigureAwait(false);
+    }
+}
+```
+
+### Folder Structure for Custom Types
+
+Each module's SharedKernel must include a `CustomTypes` folder:
+
+```
+SantaClaus.Marketing.SharedKernel/
+├── Commands/
+│   ├── CreateWish.cs
+│   ├── ApproveWish.cs
+│   ├── RejectWish.cs
+│   ├── CreateLetter.cs
+│   └── ProcessLetter.cs
+├── CustomTypes/
+│   ├── ChildId.cs (TASK-305: Wish aggregate ID)
+│   ├── ToyDescription.cs (TASK-305)
+│   ├── WishPriority.cs (TASK-305)
+│   ├── RejectionReason.cs (TASK-305)
+│   ├── LetterId.cs (TASK-303: Letter aggregate ID)
+│   ├── LetterContent.cs (TASK-303)
+│   ├── LetterLanguage.cs (TASK-303)
+│   └── LetterStatusValue.cs (TASK-303)
+└── Events/
+    ├── WishCreated.cs
+    ├── WishApproved.cs
+    ├── WishRejected.cs
+    ├── LetterCreated.cs
+    └── LetterProcessed.cs
+```
+
 ## Implementation Notes
 
 ### Module Structure

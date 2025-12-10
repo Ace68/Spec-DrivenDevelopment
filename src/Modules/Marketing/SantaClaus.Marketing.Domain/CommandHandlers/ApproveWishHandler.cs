@@ -1,27 +1,22 @@
 using Muflone.Core;
 using Muflone.Persistence;
+using Microsoft.Extensions.Logging;
 using SantaClaus.Marketing.Domain.Entities;
 using SantaClaus.Marketing.SharedKernel.Commands;
 using SantaClaus.Shared.Exceptions;
 
 namespace SantaClaus.Marketing.Domain.CommandHandlers;
 
-public sealed class ApproveWishHandler
+public sealed class ApproveWishHandler(IRepository repository, ILoggerFactory loggerFactory)
+    : CommandHandlerBaseAsync<ApproveWish>(repository, loggerFactory)
 {
-    private readonly IRepository _repository;
-
-    public ApproveWishHandler(IRepository repository)
+    public override async Task HandleAsync(ApproveWish command, CancellationToken cancellationToken = new())
     {
-        _repository = repository;
-    }
-
-    public async Task HandleAsync(ApproveWish command, CancellationToken cancellationToken = default)
-    {
-        var wish = await _repository.GetByIdAsync<Wish>(command.AggregateId, cancellationToken).ConfigureAwait(false);
+        var wish = await Repository.GetByIdAsync<Wish>(command.AggregateId, cancellationToken).ConfigureAwait(false);
         if (wish is null)
             throw new NotFoundException(nameof(Wish), command.AggregateId.Value);
 
         wish.Approve();
-        await _repository.SaveAsync(wish, command.AggregateId, cancellationToken).ConfigureAwait(false);
+        await Repository.SaveAsync(wish, Guid.NewGuid(), cancellationToken).ConfigureAwait(false);
     }
 }

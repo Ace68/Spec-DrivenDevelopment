@@ -1,19 +1,14 @@
+using Microsoft.Extensions.Logging;
 using Muflone.Persistence;
 using SantaClaus.Marketing.Domain.Entities;
 using SantaClaus.Marketing.SharedKernel.Commands;
 
 namespace SantaClaus.Marketing.Domain.CommandHandlers;
 
-public class CreateLetterHandler
+public class CreateLetterHandler(IRepository repository, ILoggerFactory loggerFactory)
+    : CommandHandlerBaseAsync<CreateLetter>(repository, loggerFactory)
 {
-    private readonly IRepository _repository;
-
-    public CreateLetterHandler(IRepository repository)
-    {
-        _repository = repository;
-    }
-
-    public async Task HandleAsync(CreateLetter command, CancellationToken cancellationToken = default)
+    public override async Task HandleAsync(CreateLetter command, CancellationToken cancellationToken = default)
     {
         var letterId = Guid.Parse(command.AggregateId.Value);
         
@@ -25,6 +20,6 @@ public class CreateLetterHandler
             command.Language
         );
 
-        await _repository.SaveAsync(letter, letterId, cancellationToken);
+        await Repository.SaveAsync(letter, Guid.NewGuid(), cancellationToken);
     }
 }

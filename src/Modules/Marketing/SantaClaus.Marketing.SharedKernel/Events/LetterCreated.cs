@@ -1,3 +1,4 @@
+using SantaClaus.Marketing.SharedKernel.CustomTypes;
 using SantaClaus.Shared.Events;
 
 namespace SantaClaus.Marketing.SharedKernel.Events;
@@ -5,7 +6,8 @@ namespace SantaClaus.Marketing.SharedKernel.Events;
 public sealed record LetterCreated : DomainEvent
 {
     public Guid ChildId { get; init; }
-    public string Content { get; init; } = string.Empty;
+    public LetterContent Content { get; init; } = new(string.Empty);
     public DateTime ReceivedDate { get; init; }
-    public string Language { get; init; } = string.Empty;
+    public LetterLanguage Language { get; init; } = new(string.Empty);
 }
+
