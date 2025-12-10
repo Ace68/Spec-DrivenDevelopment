@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SantaClaus.Marketing.Domain\SantaClaus.Marketing.Domain.csproj" />
+    <ProjectReference Include="..\SantaClaus.Marketing.Infrastructure\SantaClaus.Marketing.Infrastructure.csproj" />
     <ProjectReference Include="..\SantaClaus.Marketing.ReadModel\SantaClaus.Marketing.ReadModel.csproj" />
     <ProjectReference Include="..\SantaClaus.Marketing.SharedKernel\SantaClaus.Marketing.SharedKernel.csproj" />
     <ProjectReference Include="..\..\..\SantaClaus.Shared\SantaClaus.Shared.csproj" />
