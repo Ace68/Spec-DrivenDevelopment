@@ -15,8 +15,8 @@ public static class MufloneConfiguration
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddMufloneInfrastructure(this IServiceCollection services)
     {
-        // Placeholder for Muflone infrastructure configuration
-        // Will be implemented when integrating with actual domain handlers
+        // Muflone handlers are convention-based and auto-discovered
+        // Command and Domain Event handlers will be registered by module facade helpers
         
         return services;
     }

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using SantaClaus.Marketing.Infrastructure.ReadModels;
+using SantaClaus.Marketing.ReadModel.QueryHandlers;
 
 namespace SantaClaus.Marketing.Facade;
 
@@ -10,6 +11,13 @@ public static class MarketingFacadeHelper
     {
         services.AddSingleton<IReadModelStore, InMemoryReadModelStore>();
         services.AddScoped<IMarketingFacade, MarketingFacade>();
+        
+        // Register query handlers
+        services.AddScoped<GetLetterByIdHandler>();
+        services.AddScoped<GetLettersByChildHandler>();
+        services.AddScoped<GetChildByIdHandler>();
+        services.AddScoped<GetWishesByChildHandler>();
+        
         return services;
     }
 
