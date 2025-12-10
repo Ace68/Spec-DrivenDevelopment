@@ -1,5 +1,6 @@
 https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/
 https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html
+https://github.com/github/spec-kit/releases/
 
 
 https://github.com/github/spec-kit:
