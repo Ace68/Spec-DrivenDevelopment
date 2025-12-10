@@ -18,13 +18,13 @@ public interface IReadModelStore
     /// <summary>
     /// Get a letter by ID.
     /// </summary>
-    LetterDto? GetLetterById(Guid letterId);
+    LetterDto? GetLetterById(string letterId);
 
     /// <summary>
     /// Get all letters for a specific child with optional filtering.
     /// </summary>
     IReadOnlyList<LetterListItemDto> GetLettersByChild(
-        Guid childId,
+        string childId,
         string? status = null,
         int page = 1,
         int pageSize = 20);
@@ -32,7 +32,7 @@ public interface IReadModelStore
     /// <summary>
     /// Get total count of letters for a child with optional status filter.
     /// </summary>
-    int GetLetterCountByChild(Guid childId, string? status = null);
+    int GetLetterCountByChild(string childId, string? status = null);
 
     #endregion
 
@@ -46,7 +46,7 @@ public interface IReadModelStore
     /// <summary>
     /// Get a child by ID.
     /// </summary>
-    ChildDto? GetChildById(Guid childId);
+    ChildDto? GetChildById(string childId);
 
     /// <summary>
     /// Get all children with optional filtering.
@@ -74,12 +74,12 @@ public interface IReadModelStore
     /// <summary>
     /// Get all wishes for a specific child.
     /// </summary>
-    IReadOnlyList<WishItemDto> GetWishesByChild(Guid childId);
+    IReadOnlyList<WishItemDto> GetWishesByChild(string childId);
 
     /// <summary>
     /// Get a specific wish by ID.
     /// </summary>
-    WishItemDto? GetWishById(Guid wishId);
+    WishItemDto? GetWishById(string wishId);
 
     #endregion
 }

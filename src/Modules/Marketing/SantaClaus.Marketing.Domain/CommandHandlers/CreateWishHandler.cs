@@ -11,7 +11,7 @@ public sealed class CreateWishHandler(IRepository repository, ILoggerFactory log
 {
     public override async Task HandleAsync(CreateWish command, CancellationToken cancellationToken = new())
     {
-        var wish = Wish.Create(Guid.Parse(command.AggregateId.Value), new ChildId(command.ChildId), command.ToyDescription, command.Priority);
+        var wish = Wish.Create(Guid.Parse(command.AggregateId.Value), command.ChildId, command.ToyDescription, command.Priority);
         await Repository.SaveAsync(wish, Guid.NewGuid(), cancellationToken).ConfigureAwait(false);
     }
 }

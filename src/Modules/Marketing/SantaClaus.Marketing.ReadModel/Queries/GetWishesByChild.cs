@@ -5,7 +5,7 @@ namespace SantaClaus.Marketing.ReadModel.Queries;
 /// </summary>
 public sealed record GetWishesByChild
 {
-    public required Guid ChildId { get; init; }
+    public required string ChildId { get; init; }
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
 }

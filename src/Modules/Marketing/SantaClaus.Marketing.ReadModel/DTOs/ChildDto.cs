@@ -4,7 +4,7 @@ namespace SantaClaus.Marketing.ReadModel.DTOs;
 /// Data Transfer Object for Child read model.
 /// </summary>
 public sealed record ChildDto(
-    Guid ChildId,
+    string ChildId,
     string FirstName,
     string LastName,
     DateTime DateOfBirth,
@@ -17,7 +17,7 @@ public sealed record ChildDto(
 /// Simplified Child DTO for list items.
 /// </summary>
 public sealed record ChildListItemDto(
-    Guid ChildId,
+    string ChildId,
     string FirstName,
     string LastName,
     string Country,

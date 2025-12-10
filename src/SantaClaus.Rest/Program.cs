@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Serilog;
 using SantaClaus.Infrastructure;
 using SantaClaus.Marketing.SharedKernel.Converters;

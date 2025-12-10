@@ -20,14 +20,14 @@ public sealed class StrongTypeJsonConverterFactory : JsonConverterFactory
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         if (typeToConvert == typeof(LetterId))
-            return new StrongTypeConverter<LetterId, Guid>(
+            return new StrongTypeConverter<LetterId, string>(
                 (value) => new LetterId(value),
-                (id) => Guid.Parse(id.Value));
+                (id) => id.Value);
 
         if (typeToConvert == typeof(ChildId))
-            return new StrongTypeConverter<ChildId, Guid>(
+            return new StrongTypeConverter<ChildId, string>(
                 (value) => new ChildId(value),
-                (id) => Guid.Parse(id.Value));
+                (id) => id.Value);
 
         if (typeToConvert == typeof(LetterContent))
             return new StrongTypeConverter<LetterContent, string>(

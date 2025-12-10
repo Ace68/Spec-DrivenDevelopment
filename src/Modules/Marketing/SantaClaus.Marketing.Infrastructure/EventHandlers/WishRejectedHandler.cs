@@ -13,7 +13,7 @@ public sealed class WishRejectedHandler(IReadModelStore readModelStore)
     {
         ArgumentNullException.ThrowIfNull(@event);
 
-        var existingWish = readModelStore.GetWishById(Guid.Parse(@event.AggregateId.Value));
+        var existingWish = readModelStore.GetWishById(@event.AggregateId.Value);
         if (existingWish is null)
         {
             return;
@@ -26,7 +26,7 @@ public sealed class WishRejectedHandler(IReadModelStore readModelStore)
             Priority: existingWish.Priority,
             Status: "Rejected");
 
-        readModelStore.UpsertWish(Guid.Parse(@event.AggregateId.Value).ToString(), updatedWish);
+        readModelStore.UpsertWish(@event.AggregateId.Value, updatedWish);
         await Task.CompletedTask;
     }
 }

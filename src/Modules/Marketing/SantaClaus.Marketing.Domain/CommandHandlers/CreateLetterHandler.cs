@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Muflone.Persistence;
 using SantaClaus.Marketing.Domain.Entities;
 using SantaClaus.Marketing.SharedKernel.Commands;
+using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.Domain.CommandHandlers;
 
@@ -10,10 +11,8 @@ public class CreateLetterHandler(IRepository repository, ILoggerFactory loggerFa
 {
     public override async Task HandleAsync(CreateLetter command, CancellationToken cancellationToken = default)
     {
-        var letterId = Guid.Parse(command.AggregateId.Value);
-        
         var letter = Letter.Create(
-            letterId,
+            (LetterId)command.AggregateId,
             command.ChildId,
             command.Content,
             command.ReceivedDate,

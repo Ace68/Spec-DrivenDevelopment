@@ -7,12 +7,12 @@ public sealed class LetterCreated(
     LetterId aggregateId,
     ChildId childId,
     LetterContent content,
-    DateTime receiveDate,
+    ReceivedDate receiveDate,
     LetterLanguage letterLanguage) : DomainEvent(aggregateId)
 {
     public ChildId ChildId { get; private set; } = childId;
     public LetterContent Content { get; private set; } = content;
-    public DateTime ReceivedDate { get; private set; } = receiveDate;
+    public ReceivedDate ReceivedDate { get; private set; } = receiveDate;
     public LetterLanguage Language { get; private set; } = letterLanguage;
 }
 

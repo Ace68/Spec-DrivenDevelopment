@@ -25,7 +25,7 @@ public sealed class ChildRegisteredHandler(IReadModelStore readModelStore)
             Coordinates: coordinatesDto);
 
         var childDto = new ChildDto(
-            ChildId: Guid.Parse(@event.AggregateId.Value),
+            ChildId: @event.AggregateId.Value,
             FirstName: @event.FirstName,
             LastName: @event.LastName,
             DateOfBirth: @event.DateOfBirth,

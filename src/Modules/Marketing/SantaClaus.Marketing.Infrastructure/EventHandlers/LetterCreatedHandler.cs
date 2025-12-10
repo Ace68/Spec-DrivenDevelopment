@@ -14,8 +14,8 @@ public sealed class LetterCreatedHandler(IReadModelStore readModelStore)
         ArgumentNullException.ThrowIfNull(@event);
 
         var letterDto = new LetterDto(
-            LetterId: Guid.Parse(@event.AggregateId.Value),
-            ChildId: Guid.Parse(@event.ChildId.Value),
+            LetterId: @event.AggregateId.Value,
+            ChildId: @event.ChildId.Value,
             Content: @event.Content.Value,
             ReceivedDate: DateTime.UtcNow,
             Language: @event.Language.Value,

@@ -4,8 +4,8 @@ namespace SantaClaus.Marketing.ReadModel.DTOs;
 /// Data Transfer Object for Letter read model.
 /// </summary>
 public sealed record LetterDto(
-    Guid LetterId,
-    Guid ChildId,
+    string LetterId,
+    string ChildId,
     string Content,
     DateTime ReceivedDate,
     string Language,
@@ -16,8 +16,8 @@ public sealed record LetterDto(
 /// Simplified DTO for letter list items.
 /// </summary>
 public sealed record LetterListItemDto(
-    Guid LetterId,
-    Guid ChildId,
+    string LetterId,
+    string ChildId,
     DateTime ReceivedDate,
     string Status);
 

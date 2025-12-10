@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Authors>Alberto Acerbis - Alessandro Colla</Authors>
+    <Version>8.0.3</Version>
+    <Description>InMemory Service bus support and wrappers for Muflone's CommandHandlers and EventHandlers</Description>
+    <PackageProjectUrl>https://github.com/CQRS-Muflone/Muflone.Transport.InMemory</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CQRS-Muflone/Muflone.Transport.InMemory</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>Broker, InMemory, CQRS, Saga, Event Sourcing, Event Store, Service Bus</PackageTags>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>Using an InMemory broker to dispath commands and events</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Muflone" Version="8.5.0" />
+  </ItemGroup>
+
+</Project>

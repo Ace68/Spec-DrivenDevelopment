@@ -86,11 +86,11 @@ public static class MarketingEndpoints
             if (string.IsNullOrWhiteSpace(request.Content))
                 return Results.BadRequest("Letter content is required");
 
-            var letterId = Guid.NewGuid();
-            var command = new CreateLetter(new LetterId(letterId),
+            var letterId = Guid.NewGuid().ToString();
+            CreateLetter command = new (new LetterId(letterId),
                 new ChildId(request.ChildId),
                 new LetterContent(request.Content),
-                request.ReceivedDate ?? DateTime.UtcNow,
+                new ReceivedDate(request.ReceivedDate ?? DateTime.UtcNow),
                 new LetterLanguage(request.Language ?? "EN"));
 
             await serviceBus.SendAsync(command, cancellationToken);
@@ -104,7 +104,7 @@ public static class MarketingEndpoints
     }
 
     private static async Task<IResult> ProcessLetter(
-        Guid letterId,
+        string letterId,
         [FromServices] IServiceBus serviceBus,
         [FromServices] IReadModelStore readModelStore,
         CancellationToken cancellationToken)
@@ -129,7 +129,7 @@ public static class MarketingEndpoints
     }
 
     private static async Task<IResult> GetLetterByIdHandler(
-        Guid letterId,
+        string letterId,
         [FromServices] GetLetterByIdHandler handler,
         CancellationToken cancellationToken)
     {
@@ -142,14 +142,14 @@ public static class MarketingEndpoints
     }
 
     private static async Task<IResult> GetLetters(
-        [FromQuery] Guid? childId,
+        [FromQuery] string? childId,
         [FromQuery] string? status,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         [FromServices] GetLettersByChildHandler handler = null!,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetLettersByChild { ChildId = childId ?? Guid.Empty, PageNumber = page, PageSize = pageSize };
+        var query = new GetLettersByChild { ChildId = childId ?? string.Empty, PageNumber = page, PageSize = pageSize };
         var letters = await handler.HandleAsync(query, cancellationToken);
         var letterList = letters.ToList();
 
@@ -166,7 +166,7 @@ public static class MarketingEndpoints
     // ==================== CHILDREN HANDLERS ====================
 
     private static async Task<IResult> GetChildById(
-        Guid childId,
+        string childId,
         [FromServices] GetChildByIdHandler handler,
         CancellationToken cancellationToken)
     {
@@ -209,7 +209,7 @@ public static class MarketingEndpoints
     // ==================== WISHES HANDLERS ====================
 
     private static async Task<IResult> GetWishesByChild(
-        Guid childId,
+        string childId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         [FromServices] GetWishesByChildHandler handler = null!,
@@ -228,7 +228,7 @@ public static class MarketingEndpoints
 // ==================== REQUEST/RESPONSE MODELS ====================
 
 public record CreateLetterRequest(
-    Guid ChildId,
+    string ChildId,
     string Content,
     string? Language = null,
     DateTime? ReceivedDate = null

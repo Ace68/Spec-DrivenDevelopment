@@ -11,16 +11,16 @@ namespace SantaClaus.Marketing.Infrastructure.ReadModels;
 public sealed class InMemoryReadModelStore : IReadModelStore
 {
     // Letter storage: Key = LetterId
-    private readonly ConcurrentDictionary<Guid, LetterDto> _letters = new();
+    private readonly ConcurrentDictionary<string, LetterDto> _letters = new();
 
     // Child storage: Key = ChildId
-    private readonly ConcurrentDictionary<Guid, ChildDto> _children = new();
+    private readonly ConcurrentDictionary<string, ChildDto> _children = new();
 
     // Wish storage: Key = WishId
-    private readonly ConcurrentDictionary<Guid, WishItemDto> _wishes = new();
+    private readonly ConcurrentDictionary<string, WishItemDto> _wishes = new();
 
     // Notification storage: Key = NotificationId
-    private readonly ConcurrentDictionary<Guid, NotificationDto> _notifications = new();
+    private readonly ConcurrentDictionary<string, NotificationDto> _notifications = new();
 
     #region Letter Operations
 
@@ -30,13 +30,13 @@ public sealed class InMemoryReadModelStore : IReadModelStore
         _letters.AddOrUpdate(letter.LetterId, letter, (_, _) => letter);
     }
 
-    public LetterDto? GetLetterById(Guid letterId)
+    public LetterDto? GetLetterById(string letterId)
     {
         return _letters.TryGetValue(letterId, out var letter) ? letter : null;
     }
 
     public IReadOnlyList<LetterListItemDto> GetLettersByChild(
-        Guid childId,
+        string childId,
         string? status = null,
         int page = 1,
         int pageSize = 20)
@@ -56,7 +56,7 @@ public sealed class InMemoryReadModelStore : IReadModelStore
             .AsReadOnly();
     }
 
-    public int GetLetterCountByChild(Guid childId, string? status = null)
+    public int GetLetterCountByChild(string childId, string? status = null)
     {
         var query = _letters.Values.Where(l => l.ChildId == childId);
 
@@ -76,9 +76,9 @@ public sealed class InMemoryReadModelStore : IReadModelStore
         _children.AddOrUpdate(child.ChildId, child, (_, _) => child);
     }
 
-    public ChildDto? GetChildById(Guid childId)
+    public ChildDto? GetChildById(string childId)
     {
-        return _children.TryGetValue(childId, out var child) ? child : null;
+        return _children.GetValueOrDefault(childId);
     }
 
     public IReadOnlyList<ChildListItemDto> GetChildren(
@@ -133,7 +133,7 @@ public sealed class InMemoryReadModelStore : IReadModelStore
         _wishes.AddOrUpdate(wish.WishId, wish, (_, _) => wish);
     }
 
-    public IReadOnlyList<WishItemDto> GetWishesByChild(Guid childId)
+    public IReadOnlyList<WishItemDto> GetWishesByChild(string childId)
     {
         return _wishes.Values
             .Where(w => _children.TryGetValue(childId, out _)) // Verify child exists
@@ -142,9 +142,9 @@ public sealed class InMemoryReadModelStore : IReadModelStore
             .AsReadOnly();
     }
 
-    public WishItemDto? GetWishById(Guid wishId)
+    public WishItemDto? GetWishById(string wishId)
     {
-        return _wishes.TryGetValue(wishId, out var wish) ? wish : null;
+        return _wishes.GetValueOrDefault(wishId);
     }
 
     #endregion
@@ -157,7 +157,7 @@ public sealed class InMemoryReadModelStore : IReadModelStore
         _notifications.TryAdd(notification.NotificationId, notification);
     }
 
-    public IReadOnlyList<NotificationListItemDto> GetNotificationsByChild(Guid childId)
+    public IReadOnlyList<NotificationListItemDto> GetNotificationsByChild(string childId)
     {
         return _notifications.Values
             .Where(n => n.ChildId == childId)

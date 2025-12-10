@@ -4,8 +4,8 @@ namespace SantaClaus.Marketing.ReadModel.DTOs;
 /// Data Transfer Object for Notification read model.
 /// </summary>
 public sealed record NotificationDto(
-    Guid NotificationId,
-    Guid ChildId,
+    string NotificationId,
+    string ChildId,
     string Type,
     string Message,
     string Channel,
@@ -16,7 +16,7 @@ public sealed record NotificationDto(
 /// Simplified Notification DTO for list items.
 /// </summary>
 public sealed record NotificationListItemDto(
-    Guid NotificationId,
+    string NotificationId,
     string Type,
     DateTime SentAt,
     string Status);
@@ -25,5 +25,5 @@ public sealed record NotificationListItemDto(
 /// Response containing notification history.
 /// </summary>
 public sealed record NotificationHistoryResponseDto(
-    Guid ChildId,
+    string ChildId,
     IReadOnlyList<NotificationListItemDto> Notifications);

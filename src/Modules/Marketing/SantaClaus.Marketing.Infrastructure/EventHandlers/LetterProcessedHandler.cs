@@ -13,7 +13,7 @@ public sealed class LetterProcessedHandler(IReadModelStore readModelStore)
     {
         ArgumentNullException.ThrowIfNull(@event);
 
-        var existingLetter = readModelStore.GetLetterById(Guid.Parse(@event.AggregateId.Value));
+        var existingLetter = readModelStore.GetLetterById(@event.AggregateId.Value);
         if (existingLetter is null)
         {
             return;

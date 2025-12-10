@@ -14,7 +14,7 @@ public sealed class WishCreatedHandler(IReadModelStore readModelStore)
         ArgumentNullException.ThrowIfNull(@event);
 
         var wishDto = new WishItemDto(
-            WishId: Guid.NewGuid(),
+            WishId: Guid.NewGuid().ToString(),
             Description: @event.ToyDescription,
             Category: "General",
             Priority: @event.Priority,

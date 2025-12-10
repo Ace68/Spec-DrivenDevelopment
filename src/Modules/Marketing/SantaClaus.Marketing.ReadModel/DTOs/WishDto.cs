@@ -4,7 +4,7 @@ namespace SantaClaus.Marketing.ReadModel.DTOs;
 /// Data Transfer Object for a single Wish.
 /// </summary>
 public sealed record WishItemDto(
-    Guid WishId,
+    string WishId,
     string Description,
     string Category,
     int Priority,
@@ -14,5 +14,5 @@ public sealed record WishItemDto(
 /// Data Transfer Object for Child Wishes collection.
 /// </summary>
 public sealed record WishCollectionDto(
-    Guid ChildId,
+    string ChildId,
     IReadOnlyList<WishItemDto> Wishes);

@@ -13,7 +13,7 @@ public sealed class ChildBehaviorUpdatedHandler(IReadModelStore readModelStore)
     {
         ArgumentNullException.ThrowIfNull(@event);
 
-        var existingChild = readModelStore.GetChildById(Guid.Parse(@event.AggregateId.Value));
+        var existingChild = readModelStore.GetChildById(@event.AggregateId.Value);
         if (existingChild is null)
         {
             return;

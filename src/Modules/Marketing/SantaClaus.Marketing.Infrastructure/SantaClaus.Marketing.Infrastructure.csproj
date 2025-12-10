@@ -12,6 +12,12 @@
     <PackageReference Include="Muflone" Version="8.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Collections.Concurrent">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.NETCore.App\10.0.1\System.Collections.Concurrent.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -5,5 +5,5 @@ namespace SantaClaus.Marketing.ReadModel.Queries;
 /// </summary>
 public sealed record GetLetterById
 {
-    public required Guid LetterId { get; init; }
+    public required string LetterId { get; init; }
 }
