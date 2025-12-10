@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Muflone.Persistence;
 using SantaClaus.Marketing.Infrastructure.ReadModels;
 using SantaClaus.Marketing.ReadModel.DTOs;
 using SantaClaus.Marketing.ReadModel.Queries;
 using SantaClaus.Marketing.ReadModel.QueryHandlers;
+using SantaClaus.Marketing.SharedKernel.Commands;
+using SantaClaus.Marketing.SharedKernel.CustomTypes;
 
 namespace SantaClaus.Marketing.Facade;
 
@@ -30,6 +33,21 @@ public static class MarketingEndpoints
             .WithName("GetLetters")
             .WithSummary("List letters with optional filtering")
             .Produces<PaginatedResult<LetterListItemDto>>(StatusCodes.Status200OK);
+
+        // POST /v1/marketing/letters
+        group.MapPost("/letters", CreateLetter)
+            .WithName("CreateLetter")
+            .WithSummary("Create a new letter")
+            .Produces<LetterDto>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest);
+
+        // PUT /v1/marketing/letters/{letterId}/process
+        group.MapPut("/letters/{letterId:guid}/process", ProcessLetter)
+            .WithName("ProcessLetter")
+            .WithSummary("Mark a letter as processed")
+            .Produces<LetterDto>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest);
 
         // ==================== CHILDREN ====================
 
@@ -56,6 +74,70 @@ public static class MarketingEndpoints
     }
 
     // ==================== LETTER HANDLERS ====================
+
+    private static async Task<IResult> CreateLetter(
+        [FromBody] CreateLetterRequest request,
+        [FromServices] IServiceBus serviceBus,
+        [FromServices] IReadModelStore readModelStore,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.Content))
+                return Results.BadRequest("Letter content is required");
+
+            var letterId = Guid.NewGuid();
+            var command = new CreateLetter
+            {
+                AggregateId = new LetterId(letterId),
+                ChildId = request.ChildId,
+                Content = new LetterContent(request.Content),
+                ReceivedDate = request.ReceivedDate ?? DateTime.UtcNow,
+                Language = new LetterLanguage(request.Language ?? "EN")
+            };
+
+            await serviceBus.SendAsync(command, cancellationToken);
+
+            // Get the created letter from read model
+            var letter = readModelStore.GetLetterById(letterId);
+            
+            return letter is not null
+                ? Results.Created($"/v1/marketing/letters/{letter.LetterId}", letter)
+                : Results.StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    private static async Task<IResult> ProcessLetter(
+        Guid letterId,
+        [FromServices] IServiceBus serviceBus,
+        [FromServices] IReadModelStore readModelStore,
+        CancellationToken cancellationToken)
+    {
+        var letter = readModelStore.GetLetterById(letterId);
+        if (letter is null)
+            return Results.NotFound();
+
+        if (letter.Status == "Processed")
+            return Results.BadRequest("Letter is already processed");
+
+        var command = new ProcessLetter
+        {
+            AggregateId = new LetterId(letterId)
+        };
+
+        await serviceBus.SendAsync(command, cancellationToken);
+
+        // Get the updated letter from read model
+        var updatedLetter = readModelStore.GetLetterById(letterId);
+        
+        return updatedLetter is not null
+            ? Results.Ok(updatedLetter)
+            : Results.StatusCode(StatusCodes.Status500InternalServerError);
+    }
 
     private static async Task<IResult> GetLetterByIdHandler(
         Guid letterId,
@@ -155,6 +237,13 @@ public static class MarketingEndpoints
 }
 
 // ==================== REQUEST/RESPONSE MODELS ====================
+
+public record CreateLetterRequest(
+    Guid ChildId,
+    string Content,
+    string? Language = null,
+    DateTime? ReceivedDate = null
+);
 
 public record PaginatedResult<T>(
     List<T> Items,

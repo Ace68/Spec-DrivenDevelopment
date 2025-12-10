@@ -15,7 +15,8 @@ try
 
     builder.Host.UseSerilog();
 
-    builder.Services.AddMufloneInfrastructure();
+    // builder.Services.AddInMemoryBroker();
+    builder.Services.AddInfrastructure();
     builder.Services.AddOpenApiModule();
     builder.Services.AddOpenTelemetryModule(builder.Configuration);
     builder.Services.AddModules();
