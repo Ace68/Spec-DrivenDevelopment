@@ -1,3 +1,50 @@
+# Build Santa Claus Application using Spec-Driven Development
+
+## SpecKit
+
+Run the toolkit directly without installing:
+
+```powershell
+uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
+```
+
+It's possible install the CLI
+```powershell
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+```
+
+Once you init the project, move into the folder project and run VS Code
+```powershell
+cd <PROJECT_NAME>
+code .
+```
+
+It's important to run VS Code directly from the right folder.
+
+## Create the spec
+
+```powershell
+/speckit.specify Build a web application to manage the Santa Claus work during xmas time ....
+```
+
+## Create a technical implementation plan
+
+```powershell
+/speckit.plan
+```
+
+## Break down into tasks
+
+```powershell
+/speckit.tasks
+```
+
+## Run
+
+```powershell
+/speckit.implement
+```
+
 # Santa Claus Work Management API
 
 A **Domain-Driven Design (DDD)** REST API built with **.NET 10** and **Minimal API**, implementing **CQRS+ES** pattern using **Muflone 8.5.0**.

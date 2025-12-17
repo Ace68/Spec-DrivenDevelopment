@@ -7,7 +7,7 @@ This specification defines a Minimal API for managing Santa Claus operations, or
 ## Project Information
 
 - **Project Name**: SantaClaus
-- **Architecture**: Minimal API with .NET 9
+- **Architecture**: Minimal API with .NET 10
 - **Pattern**: Domain-Driven Design with Bounded Contexts
 - **HTTP Port**: 5000 (Development)
 

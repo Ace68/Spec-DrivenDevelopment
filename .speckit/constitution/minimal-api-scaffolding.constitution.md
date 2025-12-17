@@ -58,7 +58,7 @@ Strict dependency matrix MUST be enforced:
 - `TreatWarningsAsErrors=true` in all .csproj files
 - `Nullable=enable` for null safety
 - `ImplicitUsings=enable` for cleaner code
-- Target .NET 9.0 or higher
+- Target .NET 10.0 or higher
 - All code and comments in English
 - No `Class1.cs` default files
 
